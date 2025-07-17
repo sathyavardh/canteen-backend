@@ -1,0 +1,55 @@
+1. Initialize the project
+        npm init -y => create pkg.json
+        
+2. Install TypeScript and Prisma
+        
+        npm install typescript ts-node @types/node -D =>install via dev dependancies
+        npm i prisma -D
+
+3. Initialize TypeScript
+        npx tsc --init
+
+4. Initialize Prisma
+        npx prisma init --datasource-provider sqlite (or)
+        npx prisma init --datasource-provider postgresql
+        This will generate:
+
+        .env → for DB credentials
+
+        prisma/schema.prisma → for Prisma models and config
+
+5. Configure .env for PostgreSQL
+        Open .env and replace the placeholder with your actual PostgreSQL connection URL:
+
+        DATABASE_URL="postgresql://<username>:<password>@localhost:5432/<your_db_name>?schema=public"
+        Example:
+
+        env
+        DATABASE_URL="postgresql://postgres:2003@localhost:5432/canteenDb?schema=public"
+
+
+Migration
+
+canteenDb
+ Prisma CLI Commands
+
+1 Generate Prisma Client (after changing schema):
+        npm run prisma:generate
+2 Run Migration (creates migration + updates DB):
+        npm run prisma:migrate
+3 Push Schema to DB (no migrations):
+        npm run prisma:push
+4 Open Prisma Studio (GUI for DB):
+        npm run prisma:studio
+
+Run:
+npm run dev
+
+npm run build    # Compiles TypeScript to JavaScript in dist/
+npm start        # Runs dist/server.js
+
+
+npm run prisma:migrate --name add-company-description
+npm run prisma:migrate --name add-unique-to-role-name
+
+npm run prisma:migrate --name change-modified-by-updated-by
