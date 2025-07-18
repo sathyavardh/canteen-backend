@@ -53,3 +53,5 @@ npm run prisma:migrate --name add-company-description
 npm run prisma:migrate --name add-unique-to-role-name
 
 npm run prisma:migrate --name change-modified-by-updated-by
+
+npm run prisma:migrate --name modified-canteen-order-table

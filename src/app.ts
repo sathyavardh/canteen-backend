@@ -10,6 +10,8 @@ import { CompanyRoutes } from './routes/company.routes';
 import { RoleRoutes } from './routes/role.routes';
 import { CanteenRoutes } from './routes/canteen.routes';
 import { CanteenMenuRoutes } from './routes/canteenMenu.routes';
+import { CanteenOrderRoutes } from './routes/canteenOrder.routes';
+import { CompanyPaymentToCanteenRoutes } from './routes/companyPaymentToCanteen.routes';
 
 dotenv.config();
 
@@ -31,7 +33,8 @@ const companyRoutes = new CompanyRoutes();
 const roleRoutes = new RoleRoutes();
 const canteenRoutes = new CanteenRoutes();
 const canteenMenuRoutes = new CanteenMenuRoutes();
-
+const canteenOrderController = new CanteenOrderRoutes();
+const companyPaymentToCanteenRoutes = new CompanyPaymentToCanteenRoutes();
 
 // Routes
 app.use('/api/auth', authRoutes.router);
@@ -40,6 +43,8 @@ app.use('/api/companies', companyRoutes.router);
 app.use('/api/roles', roleRoutes.router);
 app.use('/api/canteens', canteenRoutes.router);
 app.use('/api/canteen-menus', canteenMenuRoutes.router);
+app.use('/api/canteen-orders', canteenOrderController.router);
+app.use('/api/company-payments-to-canteen', companyPaymentToCanteenRoutes.router);
 
 // Health check
 app.get('/health', (_, res) => {

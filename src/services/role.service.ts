@@ -1,5 +1,4 @@
 import { prismaDb } from '../config/database';
-import { Prisma } from '@prisma/client';
 
 export class RoleService {
   async create(data: any, createdBy: string) {

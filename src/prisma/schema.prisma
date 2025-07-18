@@ -14,51 +14,52 @@ datasource db {
 }
 
 model Employee {
-  id                  String          @id @default(uuid())
-  employee_name       String?         @db.VarChar(100)
-  employee_email      String?         @unique @db.VarChar(150)
-  employee_password   String?         @db.VarChar(255)
-  employee_phone      String?         @db.VarChar(20)
-  employee_address    String?         @db.VarChar(255)
-  employee_position   String?         @db.VarChar(100)
-  employee_role_id    String?         @db.VarChar(36)
-  employee_role       Role?           @relation(fields: [employee_role_id], references: [id])
-  employee_company_id String?         @db.VarChar(36)
-  employee_company    Company?        @relation(fields: [employee_company_id], references: [id])
+  id                  String         @id @default(uuid())
+  employee_name       String?        @db.VarChar(100)
+  employee_email      String?        @unique @db.VarChar(150)
+  employee_password   String?        @db.VarChar(255)
+  employee_phone      String?        @db.VarChar(20)
+  employee_address    String?        @db.VarChar(255)
+  employee_position   String?        @db.VarChar(100)
+  employee_role_id    String?        @db.VarChar(36)
+  employee_role       Role?          @relation(fields: [employee_role_id], references: [id])
+  employee_company_id String?        @db.VarChar(36)
+  employee_company    Company?       @relation(fields: [employee_company_id], references: [id])
   canteen_orders      CanteenOrder[]
 
-  isActive            Boolean         @default(true)
-  joining_date        DateTime?
-  created_at          DateTime        @default(now())
-  updated_at          DateTime        @updatedAt
-  created_by          String?         @db.VarChar(100)
-  updated_by         String?         @db.VarChar(100)
+  isActive     Boolean   @default(true)
+  joining_date DateTime?
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+  created_by   String?   @db.VarChar(100)
+  updated_by   String?   @db.VarChar(100)
 
   @@map("employee")
 }
 
 model Company {
-  id           String     @id @default(uuid())
-  company_name String?    @db.VarChar(100)
-  company_description String? @db.VarChar(255)
-  employees    Employee[]
-  created_at   DateTime   @default(now())
-  updated_at   DateTime   @updatedAt
-  created_by   String?    @db.VarChar(100)
-  updated_by  String?    @db.VarChar(100)
+  id                  String     @id @default(uuid())
+  company_name        String?    @db.VarChar(100)
+  company_description String?    @db.VarChar(255)
+  employees           Employee[]
+   company_payments CompanyPaymentToCanteen[]
+  created_at          DateTime   @default(now())
+  updated_at          DateTime   @updatedAt
+  created_by          String?    @db.VarChar(100)
+  updated_by          String?    @db.VarChar(100)
 
   @@map("company")
 }
 
 model Role {
   id               String     @id @default(uuid())
-  role_name        String?    @db.VarChar(50) @unique
+  role_name        String?    @unique @db.VarChar(50)
   role_description String?    @db.VarChar(200)
   employees        Employee[]
   created_at       DateTime   @default(now())
   updated_at       DateTime   @updatedAt
   created_by       String?    @db.VarChar(100)
-  updated_by      String?    @db.VarChar(100)
+  updated_by       String?    @db.VarChar(100)
 
   @@map("role")
 }
@@ -68,46 +69,79 @@ model Canteen {
   canteen_name   String?        @db.VarChar(100)
   canteen_menus  CanteenMenu[]
   canteen_orders CanteenOrder[]
+  company_payments CompanyPaymentToCanteen[]
   created_at     DateTime       @default(now())
   updated_at     DateTime       @updatedAt
   created_by     String?        @db.VarChar(100)
-  updated_by    String?        @db.VarChar(100)
+  updated_by     String?        @db.VarChar(100)
+
 
   @@map("canteen")
 }
 
 model CanteenMenu {
-  id                    String         @id @default(uuid())
-  menu_item_name        String?        @db.VarChar(100)
-  menu_item_description String?        @db.VarChar(255)
-  menu_item_price       Float?
-  canteen_id            String?        @db.VarChar(36)
-  canteen               Canteen?       @relation(fields: [canteen_id], references: [id])
-  canteen_orders        CanteenOrder[]
-  created_at            DateTime       @default(now())
-  updated_at            DateTime       @updatedAt
-  created_by            String?        @db.VarChar(100)
-  updated_by           String?        @db.VarChar(100)
+  id                    String   @id @default(uuid())
+  menu_item_name        String?  @db.VarChar(100)
+  menu_item_description String?  @db.VarChar(255)
+  menu_item_price       Float?   @default(0)
+  canteen_id            String?  @db.VarChar(36)
+  canteen               Canteen? @relation(fields: [canteen_id], references: [id])
+  created_at            DateTime @default(now())
+  updated_at            DateTime @updatedAt
+  created_by            String?  @db.VarChar(100)
+  updated_by            String?  @db.VarChar(100)
+
+  orderMenus CanteenOrderMenu[] 
 
   @@map("canteen_menu")
 }
 
 model CanteenOrder {
-  id               String        @id @default(uuid())
-  order_date       DateTime      @default(now())
-  order_status     String?       @db.VarChar(50)
-  canteen_id       String?       @db.VarChar(36)
-  canteen          Canteen?      @relation(fields: [canteen_id], references: [id])
-  canteen_menu_id  String?       @db.VarChar(36)
-  canteen_menu     CanteenMenu?  @relation(fields: [canteen_menu_id], references: [id])
-  employee_id      String?       @db.VarChar(36)
-  employee         Employee?     @relation(fields: [employee_id], references: [id])
-  created_at       DateTime      @default(now())
-  updated_at       DateTime      @updatedAt
-  created_by       String?       @db.VarChar(100)
-  updated_by      String?       @db.VarChar(100)
+  id          String    @id @default(uuid())
+  order_date  DateTime  @default(now())
+  canteen_id  String?   @db.VarChar(36)
+  canteen     Canteen?  @relation(fields: [canteen_id], references: [id])
+  total_price Float?    @default(0)
+  employee_id String?   @db.VarChar(36)
+  employee    Employee? @relation(fields: [employee_id], references: [id])
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  created_by  String?   @db.VarChar(100)
+  updated_by  String?   @db.VarChar(100)
+
+  //nested creation of order items
+  orderMenus CanteenOrderMenu[] 
 
   @@map("canteen_order")
 }
 
+model CanteenOrderMenu {
+  id               String       @id @default(uuid())
+  canteen_order    CanteenOrder @relation(fields: [canteen_order_id], references: [id])
+  canteen_order_id String       @db.VarChar(36)
 
+  canteen_menu    CanteenMenu @relation(fields: [canteen_menu_id], references: [id])
+  canteen_menu_id String      @db.VarChar(36)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([canteen_order_id, canteen_menu_id])
+  @@map("canteen_order_menu")
+}
+
+model CompanyPaymentToCanteen{
+  id          String    @id @default(uuid())
+  company_id  String?   @db.VarChar(36)
+  company     Company?  @relation(fields: [company_id], references: [id])
+  canteen_id  String?   @db.VarChar(36)
+  canteen     Canteen?  @relation(fields: [canteen_id], references: [id])
+  total_amount Float?    @default(0)
+  current_date DateTime @default(now())
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  created_by  String?   @db.VarChar(100)
+  updated_by  String?   @db.VarChar(100)
+
+  @@map("company_payment_to_canteen")
+}
